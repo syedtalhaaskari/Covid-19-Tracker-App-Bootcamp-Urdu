@@ -60,7 +60,6 @@ export default function NavBar({changeScreen}) {
   const classes = useStyles();
 
   let search = () => {
-    console.log(country[0])
     country[1](searchWord[0])
     if (changeScreen[0] !== 1)
       changeScreen[1](1)
