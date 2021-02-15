@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -36,34 +36,36 @@ export default function AllCountries() {
 
     useEffect(() => {
         async function getData() {
-            const response = await fetch('https://api.thevirustracker.com/free-api?countryTotals=ALL');
+            const response = await fetch('https://api.covid19api.com/summary');
             let data = await response.json();
-            delete data.sitedata;
-            Object.values(data.countryitems[0]).map((key) => {
-                if (String(key.title).toLowerCase() === country[0].toLowerCase()) {
+            data.Countries.forEach(key => {
+                if (key.Country.toLowerCase() === country[0].toLowerCase()) {
+                    delete key.ID;
+                    delete key.CountryCode;
+                    delete key.Slug;
+                    delete key.Date;
+                    delete key.Premium;
                     setGlobalData(key)
                 }
             })
         }
 
         getData()
-    }, [country[0]])
+    }, [country])
 
     let keyData = Object.keys(globalData)
     let valueData = Object.values(globalData)
 
     const data = {
         datasets: [{
-            label: valueData[1],
+            label: valueData[0],
             data: [
+                valueData[1],
+                valueData[2],
+                valueData[3],
                 valueData[4],
                 valueData[5],
                 valueData[6],
-                valueData[7],
-                valueData[8],
-                valueData[9],
-                valueData[10],
-                valueData[11]
             ],
             borderWidth: 1,
             borderColor: [
@@ -73,8 +75,6 @@ export default function AllCountries() {
                 '#E7E90D',
                 '#36A20B',
                 '#4BC00F',
-                '#FFEE03',
-                '#E7AB0D'
             ],
             backgroundColor: [
                 '#FF6384',
@@ -83,8 +83,6 @@ export default function AllCountries() {
                 '#E7E9ED',
                 '#36A2EB',
                 '#4BC0FF',
-                '#FFEE63',
-                '#E7ABED'
             ],
             hoverBackgroundColor: [
                 '#FF5184',
@@ -93,8 +91,6 @@ export default function AllCountries() {
                 '#E7D8ED',
                 '#3691EB',
                 '#4BAFFF',
-                '#FFDD63',
-                '#E79AED'
             ],
             hoverBorderColor: [
                 '#FF4184',
@@ -103,19 +99,15 @@ export default function AllCountries() {
                 '#E7C8ED',
                 '#3681EB',
                 '#4B9FFF',
-                '#FFCD63',
-                '#E78AED'
             ]
         }],
         labels: [
+            keyData[1],
+            keyData[2],
+            keyData[3],
             keyData[4],
             keyData[5],
             keyData[6],
-            keyData[7],
-            keyData[8],
-            keyData[9],
-            keyData[10],
-            keyData[11]
         ]
     };
 
@@ -125,21 +117,25 @@ export default function AllCountries() {
 
             <Grid container spacing={3}>
                 {
-
-                    Object.entries(globalData).map((key, ind) => {
-                        if (key[0] === "ourid" || key[0] === "code" || key[0] === "source")
-                            return <Fragment key={ind}></Fragment>
-                        else
+                    globalData.Country
+                        ?
+                        Object.keys(globalData).map((key, ind) => {
                             return (
                                 <Grid item xs={12} sm={4} key={ind} >
                                     <Paper className={classes.paper} elevation={3}>
-                                        <h3 className={classes.title}>{key[0].replace(/_/g, " ")}</h3>
-                                        <h3>{key[1]}</h3>
+                                        <h3 className={classes.title}>{key}</h3>
+                                        <h3>{globalData[key]}</h3>
                                     </Paper>
                                 </Grid>
                             )
-                    }
-                    )}
+                        })
+                        :
+                        <Grid item xs={12} >
+                            <Paper className={classes.paper} elevation={3}>
+                                <h3 className={classes.title}>Enter Valid Country Name</h3>
+                            </Paper>
+                        </Grid>
+                }
             </Grid>
             <div className={classes.graph}>
                 <h3 className={classes.title}>Graph</h3>
@@ -155,23 +151,3 @@ export default function AllCountries() {
         </div>
     );
 }
-
-
-
-// import React from 'react';
-
-
-
-
-// export default React.createClass({
-//   displayName: 'PolarExample',
-
-//   render() {
-//     return (
-//       <div>
-//         <h2>Polar Example</h2>
-//         <Polar data={data} />
-//       </div>
-//     );
-//   }
-// });

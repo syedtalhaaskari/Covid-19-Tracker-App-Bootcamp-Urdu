@@ -33,10 +33,11 @@ export default function GlobalStats() {
 
   useEffect(() => {
     async function getData() {
-      const response = await fetch('https://api.thevirustracker.com/free-api?global=stats');
+      const response = await fetch('https://api.covid19api.com/summary');
       let data = await response.json();
-      delete data.results[0].source;
-      setGlobalData(data.results[0]);
+
+      delete data.Global.Date;
+      setGlobalData(data.Global);
     }
 
     getData()
@@ -55,9 +56,6 @@ export default function GlobalStats() {
         valueData[3],
         valueData[4],
         valueData[5],
-        valueData[6],
-        valueData[7],
-        valueData[8],
       ],
       borderWidth: 1,
       borderColor: [
@@ -67,9 +65,6 @@ export default function GlobalStats() {
         '#E7E90D',
         '#36A20B',
         '#4BC00F',
-        '#FFEE03',
-        '#E7AB0D',
-        '#EE18ED'
       ],
       backgroundColor: [
         '#FF6384',
@@ -78,9 +73,6 @@ export default function GlobalStats() {
         '#E7E9ED',
         '#36A2EB',
         '#4BC0FF',
-        '#FFEE63',
-        '#E7ABED',
-        '#EE28ED'
       ],
       hoverBackgroundColor: [
         '#FF5184',
@@ -89,9 +81,6 @@ export default function GlobalStats() {
         '#E7D8ED',
         '#3691EB',
         '#4BAFFF',
-        '#FFDD63',
-        '#E79AED',
-        '#EE08ED'
       ],
       hoverBorderColor: [
         '#FF4184',
@@ -100,9 +89,6 @@ export default function GlobalStats() {
         '#E7C8ED',
         '#3681EB',
         '#4B9FFF',
-        '#FFCD63',
-        '#E78AED',
-        '#EDF8ED'
       ]
     }],
     labels: [
@@ -112,9 +98,6 @@ export default function GlobalStats() {
       keyData[3],
       keyData[4],
       keyData[5],
-      keyData[6],
-      keyData[7],
-      keyData[8],
     ]
   };
 
